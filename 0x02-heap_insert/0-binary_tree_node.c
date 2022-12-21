@@ -3,7 +3,7 @@
 #include <string.h>
 #include "binary_trees.h"
 
-/* binary tree insertion node
+/** binary tree insertion node
  * @parent: parent node
  * @value: value to insert
  * Return: pointer to new node
