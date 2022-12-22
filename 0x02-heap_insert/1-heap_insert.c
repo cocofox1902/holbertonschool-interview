@@ -1,118 +1,123 @@
 #include "binary_trees.h"
 
 /**
- * binary_tree_size - measures the size
- * @tree: parents
- * Return: size or 0
+ * swapper - swapper
+ * @parent: parent
+ * @node: node
+ * Return: void
  */
-size_t binary_tree_size(const binary_tree_t *tree)
+void swapper(int *parent, int *node)
 {
-	if (!tree)
+	int temp = *parent;
+	*parent = *node;
+	*node = temp;
+}
+
+/**
+ * size_tree - size of tree
+ * @tree: tree
+ * Return: size
+ */
+size_t size_tree(const binary_tree_t *tree)
+{
+	if (tree == NULL)
 	{
 		return (0);
 	}
 
-	size_t size = 1 +
-				  binary_tree_size(tree->left) +
-				  binary_tree_size(tree->right);
-	return (size);
+	return (size_tree(tree->left) + 1 + size_tree(tree->right));
 }
 
 /**
- * convertor - convertes
- * @num: size tree
- * @base: base
- * Return: string
- */
-char *convertor(unsigned long int num, int base)
-{
-	static char buff[50];
-	char *binary;
-	char *representation = "01";
-
-	binary = &buff[49];
-	*binary = '\0';
-
-	while (num)
-	{
-		binary--;
-		*binary = representation[num % base];
-		num /= base;
-	}
-
-	return (binary);
-}
-
-/**
- * insert_node - insert position
+ * childe_finder - find
  * @root: root
- * @node: node to insert
+ * @idx: node index
+ * @size: size
+ * Return: position
  */
-void insert_node(heap_t **root, heap_t *node)
+heap_t *childe_finder(heap_t *root, size_t idx, size_t size)
 {
-	char bin, *binary;
-	unsigned int idx, size;
-	heap_t *aux = NULL;
+	heap_t *left, *right;
 
-	aux = *root;
-	size = binary_tree_size(aux) + 1;
-	binary = convertor(size, 2);
-
-	for (idx = 1; idx < strlen(binary); idx++)
+	if (idx > size)
 	{
-		bin = binary[idx];
-		if (idx == strlen(binary) - 1)
-		{
-			if (bin == '1')
-			{
-				aux->right = node;
-			}
-			else if (bin == '0')
-			{
-				aux->left = node;
-			}
-			node->parent = aux;
-		}
-		else if (bin == '1')
-		{
-			aux = aux->right;
-		}
-		else if (bin == '0')
-		{
-			aux = aux->left;
-		}
+		return (NULL);
 	}
+
+	if (idx == size)
+	{
+		return (root);
+	}
+
+	left = childe_finder(root->left, 2 * idx + 1, size);
+	right = childe_finder(root->right, 2 * idx + 2, size);
+
+	if (left != NULL)
+	{
+		return (left);
+	}
+	else if (right != NULL)
+	{
+		return (right);
+	}
+	else
+	{
+		return (NULL);
+	}
+}
+
+/**
+ * parent_finder - find
+ * @root: root
+ * @new: node to insert
+ * Return: position
+ */
+heap_t *parent_finder(heap_t *root, heap_t *new)
+{
+	heap_t *parent;
+	size_t size;
+
+	size = size_tree(root);
+	parent = childe_finder(root, 0, (size - 1) / 2);
+
+	if (parent->left == NULL)
+	{
+		parent->left = new;
+	}
+	else
+	{
+		parent->right = new;
+	}
+
+	return (parent);
 }
 
 /**
  * heap_insert - insert
  * @root: root
- * @value: insertable
- * Return: the pointer
+ * @value: value
+ * Return: new node
  */
 heap_t *heap_insert(heap_t **root, int value)
 {
-	if (!root)
-	{
-		return (NULL);
-	}
+	heap_t *new_node, *parent;
 
-	heap_t *new_node = binary_tree_node(NULL, value);
+	new_node = binary_tree_node(NULL, value);
 
-	if (!(*root))
+	if (*root == NULL)
 	{
 		*root = new_node;
 		return (new_node);
 	}
 
-	insert_node(root, new_node);
-	while (new_node->parent && new_node->n > new_node->parent->n)
-	{
-		int temp = new_node->parent->n;
+	parent = parent_finder(*root, new_node);
+	new_node->parent = parent;
 
-		new_node->parent->n = new_node->n;
-		new_node->n = temp;
+	while (new_node->parent != NULL && new_node->parent->n < new_node->n)
+	{
+		swapper(&new_node->parent->n, &new_node->n);
 		new_node = new_node->parent;
 	}
+
 	return (new_node);
 }
