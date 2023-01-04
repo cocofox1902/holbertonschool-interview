@@ -10,8 +10,10 @@ def minOperations(n):
     """
     if n == 1 or n == 0:
         return 0
+
     i = 2
     count = 0
+
     while n > 1:
         if n % i == 0:
             n = n / i
