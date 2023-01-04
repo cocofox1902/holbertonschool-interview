@@ -1,23 +1,24 @@
 #!/usr/bin/python3
-"""
-file creation minOperations
-"""
+"""a method that calculates the fewest number of operations needed to result
+   in exactly n H characters in the file"""
 
 
 def minOperations(n):
     """
-    method minOperations
+        calculates the fewest number of operations
+        args:
+            n: the number of H desires in the file
+        return:
+            the number of operations needed to have the number of H
     """
-    if n == 1 or n == 0:
+    nbOperation = 0
+    nbOfPass = 2
+    if n < 1:
         return 0
-
-    i = 2
-    count = 0
-
     while n > 1:
-        if n % i == 0:
-            n = n / i
-            count += i
+        if n % nbOfPass == 0:
+            n = n / nbOfPass
+            nbOperation += nbOfPass
         else:
-            i += 1
-    return count   
+            nbOfPass += 1
+    return nbOperation
