@@ -1,20 +1,23 @@
 #!/usr/bin/python3
-"""0x03. Minimum Operations"""
+"""
+file creation minOperations
+"""
 
 
 def minOperations(n):
     """
-            calc min operations to reach n
+    method minOperations
     """
-    if n <= 1:
+    if n == 1 or n == 0:
         return 0
 
-    index = 2
+    i = 2
     count = 0
-    while index <= n:
-        if n % index == 0:
-            count += index
-            n /= index
+
+    while n > 1:
+        if n % i == 0:
+            n = n / i
+            count += i
         else:
-            index += 1
+            i += 1
     return count
