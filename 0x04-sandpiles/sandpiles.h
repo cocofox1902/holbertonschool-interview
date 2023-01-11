@@ -4,11 +4,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-typedef struct Sandpile
-{
-	int grid[3][3];
-} Sandpile;
-
 void print_sandpile(int grid[3][3]);
 int is_stable(int grid1[3][3], int grid2[3][3]);
 void addition(int grid1[3][3], int grid2[3][3]);
