@@ -1,46 +1,32 @@
 #!/usr/bin/python3
-""" 0-stats.py - Log parsing stat """
-import sys
+"""Script that reads stdin line by line and computes metrics"""
+from sys import stdin
 
-
-stats = {
-    '200': 0,
-    '301': 0,
-    '400': 0,
-    '401': 0,
-    '403': 0,
-    '404': 0,
-    '405': 0,
-    '500': 0
-}
-sizes = [0]
-
-
-def print_stats():
-    print("File size: {}".format(sizes))
-    for status, count in sorted(stats.items()):
-        if count != 0:
-            print("{}: {}".format(status, count))
+total_size = 0
+status_codes = {code: 0 for code in [
+    "200", "301", "400", "401", "403", "404", "405", "500"]}
+count = 0
 
 try:
-    for i, line in sys.stdin:
+    for line in stdin:
         try:
             args = line.strip().split(" ")
             if len(args) == 9:
-                if args[-2] in stats:
-                    stats[args[-2]] += 1
-                sizes += int(args[-1])
+                if args[-2] in status_codes:
+                    status_codes[args[-2]] += 1
+                total_size += int(args[-1])
                 count += 1
                 if count % 10 == 0:
-                    print("File size: {}".format(sizes))
-                    for status, count in sorted(stats.items()):
+                    print("File size: {}".format(total_size))
+                    for status, count in sorted(status_codes.items()):
                         if count != 0:
                             print("{}: {}".format(status, count))
-        except Exception:
+        except ValueError:
             pass
-        if i % 10 == 0:
-            print_stats()
-    print_stats()
 except KeyboardInterrupt:
-    print_stats()
-    raise
+    pass
+
+print("File size: {}".format(total_size))
+for status, count in sorted(status_codes.items()):
+    if count != 0:
+        print("{}: {}".format(status, count))
