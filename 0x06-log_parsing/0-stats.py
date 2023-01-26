@@ -2,6 +2,7 @@
 """ 0-stats.py - Log parsing stat """
 import sys
 
+
 stats = {
     '200': 0,
     '301': 0,
@@ -13,6 +14,7 @@ stats = {
     '500': 0
 }
 sizes = [0]
+
 
 def print_stats():
     print('File size: {}'.format(sum(sizes)))
