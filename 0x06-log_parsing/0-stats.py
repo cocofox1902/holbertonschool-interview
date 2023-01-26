@@ -17,20 +17,25 @@ sizes = [0]
 
 
 def print_stats():
-    print('File size: {}'.format(sum(sizes)))
-    for s_code, count in sorted(stats.items()):
-        if count:
-            print('{}: {}'.format(s_code, count))
+    print("File size: {}".format(sizes))
+    for status, count in sorted(stats.items()):
+        if count != 0:
+            print("{}: {}".format(status, count))
 
 try:
-    for i, line in enumerate(sys.stdin, start=1):
-        matches = line.rstrip().split()
+    for i, line in sys.stdin:
         try:
-            status_code = matches[-2]
-            file_size = matches[-1]
-            if status_code in stats.keys():
-                stats[status_code] += 1
-            sizes.append(int(file_size))
+            args = line.strip().split(" ")
+            if len(args) == 9:
+                if args[-2] in stats:
+                    stats[args[-2]] += 1
+                sizes += int(args[-1])
+                count += 1
+                if count % 10 == 0:
+                    print("File size: {}".format(sizes))
+                    for status, count in sorted(stats.items()):
+                        if count != 0:
+                            print("{}: {}".format(status, count))
         except Exception:
             pass
         if i % 10 == 0:
