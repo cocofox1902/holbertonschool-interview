@@ -4,17 +4,17 @@
 import sys
 
 if len(sys.argv) != 2:
-    print("Usage: nqueens number")
+    print("Usage: nqueens N")
     exit(1)
 
 try:
     number_q = int(sys.argv[1])
 except ValueError:
-    print("number must be a number")
+    print("N must be a number")
     exit(1)
 
 if number_q < 4:
-    print("number must be at least 4")
+    print("N must be at least 4")
     exit(1)
 
 
