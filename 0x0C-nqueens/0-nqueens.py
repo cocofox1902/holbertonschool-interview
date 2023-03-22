@@ -31,7 +31,7 @@ def solve_nqueens(number):
 
 
 def attack_queen(square, queen):
-    """ check if queen is attacking another quee
+    """ check if queen is attacking another gouine
     """
     (first_row, first_col) = square
     (second_row, second_col) = queen
