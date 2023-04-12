@@ -1,24 +1,33 @@
 #!/usr/bin/node
-const movieId = process.argv[2];
-const request = require('request');
-const data = JSON.parse(response.body);
-const charsData = data.characters;
 
-const url = `https://swapi-api.hbtn.io/api/films/${movieId}`;
-request(url, async (err, response) => {
-  if (err) {
-    console.error(err);
-  }
-  for (const charId in charsData) {
-    await new Promise((resolve, reject) => {
-      request(charsData[charId], function (err, response) {
-        if (err) {
-          console.log(err);
-        }
-        const charData = JSON.parse(response.body);
-        console.log(charData.name);
-        resolve();
+/*
+JavaScript script that prints all characters of a Star Wars movie
+API service: https://intranet.hbtn.io/rltoken/aiMsg1QkH-FuPn7gyo9O6A
+use the request module
+*/
+
+const request = require('request');
+const movieId = process.argv[2];
+
+// Request URL
+const url = 'https://swapi-api.hbtn.io/api/films/' + movieId;
+
+request(url, async (error, response, body) => {
+  if (error) console.log(error);
+
+  const characters = JSON.parse(body).characters;
+
+  for (const character in characters) {
+    const urlChar = await characters[character];
+
+    const name = await new Promise((resolve, reject) => {
+      request(urlChar, (error, response, body) => {
+        if (error) console.log(error);
+
+        resolve(JSON.parse(body).name);
       });
     });
+
+    console.log(name);
   }
 });
