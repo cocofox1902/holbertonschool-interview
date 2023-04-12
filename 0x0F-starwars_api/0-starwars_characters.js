@@ -7,16 +7,16 @@ request(url, async function (error, response, body) {
   } else {
     const characters = JSON.parse(body).characters;
     for (const c in characters) {
-      const response = await new Promise((resolve, reject) => {
-        request(characters[c], (error, response, body) => {
+      const res = await new Promise((resolve, reject) => {
+        request(characters[c], (error, res, html) => {
           if (error) {
             reject(error);
           } else {
-            resolve(JSON.parse(body).name);
+            resolve(JSON.parse(html).name);
           }
         });
       });
-      console.log(response);
+      console.log(res);
     }
   }
 });
