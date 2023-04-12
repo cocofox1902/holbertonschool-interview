@@ -1,4 +1,6 @@
 #!/usr/bin/node
+/* Script List characters of Star Wars movie
+*/
 const request = require('request');
 const url = `https://swapi-api.hbtn.io/api/films/${process.argv[2]}/`;
 request(url, async function (error, response, body) {
@@ -7,16 +9,16 @@ request(url, async function (error, response, body) {
   } else {
     const characters = JSON.parse(body).characters;
     for (const c in characters) {
-      const res = await new Promise((resolve, reject) => {
-        request(characters[c], (error, res, html) => {
+      const response = await new Promise((resolve, reject) => {
+        request(characters[c], (error, response, body) => {
           if (error) {
             reject(error);
           } else {
-            resolve(JSON.parse(html).name);
+            resolve(JSON.parse(body).name);
           }
         });
       });
-      console.log(res);
+      console.log(response);
     }
   }
 });
