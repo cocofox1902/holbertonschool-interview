@@ -1,117 +1,87 @@
-#include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
-
-
+#include <stdio.h>
+#include <ctype.h>
 /**
- * _isdigit - checks for a digit (0 through 9).
- * @c: The number to be checked
- * Return: 1 if c is a digit, 0 otherwise
-*/
-int _isdigit(int c)
+ * _isnumber - checks if string is number
+ * @s: string
+ * Return: 1 if number, 0 if not
+ */
+int _isnumber(char *s)
 {
-	return (c >= '0' && c <= '9');
-}
+	int i, check, d;
 
-/**
- * print_error - prints Error and exit 98
- * Return: void
-*/
-void print_error(void)
-{
-	printf("Error\n");
-	exit(98);
-}
-
-/**
- * check_digits - checks if a string contains only digits
- * @s: The string to be checked
- * Return: void
-*/
-void check_digits(char *s)
-{
-	int i;
-
-	for (i = 0; s[i] != '\0'; i++)
+	d = 0, check = 1;
+	for (i = 0; *(s + i) != 0; i++)
 	{
-		if (!_isdigit(s[i]))
-			print_error();
-	}
-}
-
-/**
- * multiply - multiplies two positive numbers
- * @num1: The first number to be multiplied
- * @num2: The second number to be multiplied
- * Return: void
-*/
-void multiply(char *num1, char *num2)
-{
-	int i, j, len1, len2, carry, n1, n2, sum;
-	int *result;
-
-	len1 = 0;
-	while (num1[len1] != '\0')
-		len1++;
-	len2 = 0;
-	while (num2[len2] != '\0')
-		len2++;
-	result = malloc((len1 + len2) * sizeof(int));
-	if (result == NULL)
-		print_error();
-
-	for (i = 0; i < len1 + len2; i++)
-		result[i] = 0;
-
-	for (i = len1 - 1; i >= 0; i--)
-	{
-		carry = 0;
-		n1 = num1[i] - '0';
-
-		for (j = len2 - 1; j >= 0; j--)
+		d = isdigit(*(s + i));
+		if (d == 0)
 		{
-			n2 = num2[j] - '0';
-			sum = n1 * n2 + result[i + j + 1] + carry;
-			carry = sum / 10;
-			result[i + j + 1] = sum % 10;
+			check = 0;
+			break;
 		}
-
-		if (carry > 0)
-			result[i + j + 1] += carry;
 	}
-	i = 0;
-	while (result[i] == 0 && i < len1 + len2 - 1)
-		i++;
-
-	for (; i < len1 + len2; i++)
-		printf("%d", result[i]);
-	printf("\n");
-	free(result);
+	return (check);
 }
 
 /**
- * main - multiplies two positive numbers
- * @argc: The number of command line arguments
- * @argv: An array containing the program command line arguments
- * Return: 0 if success, 1 otherwise
-*/
+ * _callocX - reserves memory initialized to 0
+ * @nmemb: # of bytes
+ * Return: pointer
+ */
+char *_callocX(unsigned int nmemb)
+{
+	unsigned int i;
+	char *p;
+
+	p = malloc(nmemb + 1);
+	if (p == 0)
+		return (0);
+	for (i = 0; i < nmemb; i++)
+		p[i] = '0';
+	p[i] = '\0';
+	return (p);
+}
+
+/**
+ * main - multiplies inf numbers
+ * @argc: # of cmd line args
+ * @argv: cmd line args
+ * Return: No return
+ */
 int main(int argc, char **argv)
 {
-	if (argc != 3)
-		print_error();
+	int i, j, l1, l2, lful, mul, add, ten, ten2, tl, zer = 0;
+	char *res;
 
-	for (int i = 1; i < argc; i++)
+	if (argc != 3 || _isnumber(argv[1]) == 0 || _isnumber(argv[2]) == 0)
+		printf("Error\n"), exit(98);
+	if (atoi(argv[1]) == 0 || atoi(argv[2]) == 0)
+		printf("0\n"), exit(0);
+	l1 = strlen(argv[1]), l2 = strlen(argv[2]);
+	lful = l1 + l2;
+	res = _callocX(lful);
+	if (res == 0)
+		printf("Error\n"), exit(98);
+	for (i = l2 - 1; i >= 0; i--)
 	{
-		int j = 0;
-
-		while (argv[i][j] != '\0')
+		ten = 0, ten2 = 0;
+		for (j = l1 - 1; j >= 0; j--)
 		{
-			if (!_isdigit(argv[i][j]))
-				print_error();
-			j++;
+			tl = i + j + 1;
+			mul = (argv[1][j] - '0') * (argv[2][i] - '0') + ten;
+			ten = mul / 10;
+			add = (res[tl] - '0') + (mul % 10) + ten2;
+			ten2 = add / 10;
+			res[tl] = (add % 10) + '0';
 		}
+		res[tl - 1] = (ten + ten2) + '0';
 	}
-
-	multiply(argv[1], argv[2]);
-
+	if (res[0] == '0')
+		zer = 1;
+	for (; zer < lful; zer++)
+		printf("%c", res[zer]);
+	printf("\n");
+	free(res);
 	return (0);
 }
