@@ -1,4 +1,7 @@
 #!/usr/bin/python3
+""" Island Perimeter
+"""
+
 
 def island_perimeter(grid):
     perimeter = 0
@@ -10,11 +13,9 @@ def island_perimeter(grid):
             if grid[i][j] == 1:
                 perimeter += 4
 
-                # Check left cell
                 if j > 0 and grid[i][j - 1] == 1:
                     perimeter -= 2
 
-                # Check above cell
                 if i > 0 and grid[i - 1][j] == 1:
                     perimeter -= 2
 
