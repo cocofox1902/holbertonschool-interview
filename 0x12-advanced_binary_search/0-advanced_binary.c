@@ -1,45 +1,60 @@
-#include <stdio.h>
-
+#include "search_algos.h"
 /**
- * advanced_binary - searches for a value in a sorted array of integers
- * using the Binary search algorithm
- * @array: pointer to the first element of the array to search in
- * @size: number of elements in array
- * @value: value to search for
- * Return: index where value is located or -1 if value is not present
-*/
+ * print_array - print the message
+ * @array: array to print
+ * @from: index to start print
+ * @to: index to end print
+ *
+ * Return: is a void
+ */
+void print_array(int *array, int from, int to)
+{
+	printf("Searching in array: ");
+	while (from < to)
+	{
+		printf("%i, ", array[from]);
+		from++;
+	}
+	printf("%i\n", array[from]);
+}
+/**
+ * recursion_binary - print the message
+ * @array: array to find
+ * @from: index to start search
+ * @to: index to end search
+ * @value: value to find
+ *
+ * Return: index
+ */
+int recursion_binary(int *array, int from, int to, int value)
+{
+	int mid;
 
+	print_array(array, from, to);
+	mid = (to - from) / 2 + from;
+	if (from == to)
+		return (-1);
+	if (array[mid] == value && array[mid - 1] != value)
+		return (mid);
+	if (array[mid] >= value)
+		return (recursion_binary(array, from, mid, value));
+	if (array[mid] <= value)
+		return (recursion_binary(array, mid + 1, to, value));
+	return (-1);
+}
+/**
+ * advanced_binary - print the message
+ * @array: array to find
+ * @size: array length
+ * @value: value to find
+ *
+ * Return: index
+ */
 int advanced_binary(int *array, size_t size, int value)
 {
-	if (array == NULL || size == 0)
+
+	if (!array)
 		return (-1);
 
-	int low = 0, high = size - 1;
-
-	while (low <= high)
-	{
-		int mid = (low + high) / 2;
-
-		printf("Searching in array: ");
-		for (size_t i = low; i <= high; i++)
-		{
-			printf("%d", array[i]);
-			if (i != high)
-				printf(", ");
-		}
-		printf("\n");
-
-		if (array[mid] == value)
-		{
-			if (mid == 0 || array[mid - 1] != value)
-				return (mid);
-			high = mid - 1;
-		}
-		else if (array[mid] > value)
-			high = mid - 1;
-		else
-			low = mid + 1;
-	}
-
-	return (-1);
+	return (recursion_binary(array, 0, size - 1, value));
 }
